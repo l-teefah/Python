@@ -1,6 +1,7 @@
-##Pizza Price CAlculator
+## Pizza Price Calculator
 
 print("Welcome to Python Pizza Deliveries!")
+
 size = input("What size pizza do you want? S, M or L: ")
 pepperoni = input("Do you want pepperoni on your pizza? Y or N: ")
 extra_cheese = input("Do you want extra cheese? Y or N: ")
@@ -16,14 +17,14 @@ elif size == "L":
 else:
     print ("You typed the wrong input.")
 
-#bill based on pepperoni
+# bill based on pepperoni
 if pepperoni == "Y":
     if size == "S":
         bill += 2
     else:
         bill += 3
 
-#bill based on extra cheese
+# bill based on extra cheese
 if extra_cheese == "Y":
     bill += 1
     
