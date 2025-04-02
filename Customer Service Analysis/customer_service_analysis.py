@@ -1,4 +1,4 @@
-
+# packages
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -18,25 +18,31 @@ warnings.filterwarnings('ignore')
 import seaborn as sns
 
 
+# import data
 df = pd.read_csv('Customer_support_data.csv')
 df
 
 
+# missing values
 missing_values = df.isnull().sum()
 missing_values
 
 
+# check rows with missing values
 rows_with_missing_values = df[df.isnull().any(axis=1)]
 rows_with_missing_values
 
 
+# check variables type
 df.dtypes
 
 
+# specify date columns
 date_columns = ['order_date_time', 'Issue_reported at', 'issue_responded', 'Survey_response_Date']
 for col in date_columns:
     if col in df.columns:
         df[col] = pd.to_datetime(df[col], errors='coerce')
+
 
 # Calculate response time in minutes
 if 'Issue_reported at' in df.columns and 'issue_responded' in df.columns:
@@ -50,8 +56,6 @@ df
 
 
 # check if the problem with rows not importing properly in R also occured here but they didn't
-
-
 problem_rows = df.iloc[[15437, 45128, 45176]] 
 problem_rows
 
@@ -71,7 +75,6 @@ plt.tight_layout()
 plt.show()
 
 
-
 # CSAT by channel
 plt.figure(figsize=(12, 6))
 sns.boxplot(x='channel_name', y='CSAT Score', data=df, palette="Set2")
@@ -81,7 +84,6 @@ plt.title('CSAT Scores by Channel')
 plt.xticks(rotation=45)
 plt.tight_layout()
 plt.show()
-
 
 
 # CSAT by product category
@@ -96,7 +98,6 @@ plt.tight_layout()
 plt.show()
 
 
-
 # Response time analysis
 plt.figure(figsize=(10, 6))
 sns.histplot(df['Response time (hrs)'].clip(upper=df['Response time (hrs)'].quantile(0.95)), kde=True)
@@ -105,7 +106,6 @@ plt.xlabel('Response Time (Hrs)')
 plt.ylabel('Frequency')
 plt.tight_layout()
 plt.show()
-
 
 
 # Response time vs CSAT
@@ -119,7 +119,6 @@ plt.tight_layout()
 plt.show()
 
 
-
 # CSAT by agent tenure
 plt.figure(figsize=(10, 6))
 sns.boxplot(x='Tenure Bucket', y='CSAT Score', data=df, palette="Set3")
@@ -129,7 +128,6 @@ plt.ylabel('CSAT Score')
 plt.show()
 
 
-
 # CSAT by agent shift
 plt.figure(figsize=(10, 6))
 sns.boxplot(x='Agent Shift', y='CSAT Score', data=df, palette="Set2")
@@ -137,7 +135,6 @@ plt.title('CSAT Scores by Agent Shift')
 plt.xlabel('Agent Shift')
 plt.ylabel('CSAT Score')
 plt.show()
-
 
 
 # Average Response time by channel
@@ -152,7 +149,6 @@ plt.tight_layout()
 plt.show()
 
 
-
 # Correlation heatmap of numeric variables
 plt.figure(figsize=(12, 10))
 numeric_df = df.select_dtypes(include=['float64', 'int64'])
@@ -164,7 +160,6 @@ plt.tight_layout()
 plt.show()
 
 
-
 # Top 10 cities by number of issues
 plt.figure(figsize=(12, 6))
 city_counts = df['Customer_City'].value_counts().head(20)
@@ -174,7 +169,6 @@ plt.xticks(rotation=45, ha='right')
 plt.xlabel('City')
 plt.ylabel('Number of Complaints')
 plt.tight_layout()
-
 
 
 # Agent performance analysis
@@ -214,12 +208,14 @@ categorical_features = ['channel_name', 'category', 'Sub-category', 'Product_cat
 numeric_features = ['Item_price', 'connected_handling_time', 'Response time (hrs)', 
                    'Remarks_length']
 
-# Add any time-based features created
+
+# Add time-based features created
 for col in date_columns:
     if f'{col}_hour' in df.columns:
         numeric_features.append(f'{col}_hour')
     if f'{col}_day' in df.columns:
         numeric_features.append(f'{col}_day')
+
 
 # Remove any columns that don't exist in the dataset
 categorical_features = [col for col in categorical_features if col in df.columns]
@@ -232,6 +228,7 @@ for col in date_columns:
         df[f'{col}_hour'] = df[col].dt.hour
         df[f'{col}_day'] = df[col].dt.day_of_week
         df[f'{col}_month'] = df[col].dt.month
+
 
 # Customer sentiment analysis 
 df['Remarks_length'] = df['Customer Remarks'].str.len()
@@ -250,11 +247,13 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
+
 # Basic text cleaning
 df['Remarks_cleaned'] = df['Customer Remarks'].str.lower()  # Lowercase
 df['Remarks_cleaned'] = df['Remarks_cleaned'].str.replace(r'[^\w\s]', '', regex=True)  # Remove punctuation
 df['Remarks_cleaned'] = df['Remarks_cleaned'].fillna('')  # Replace NaN with empty string
 df['Remarks_cleaned'] = df['Remarks_cleaned'].astype(str)  # Ensure all values are strings
+
 
 # Tokenization
 df['Remarks_tokens'] = df['Remarks_cleaned'].astype(str).apply(word_tokenize)
@@ -278,11 +277,13 @@ df['Sentiment_scores'] = df['Customer Remarks'].apply(lambda x: sia.polarity_sco
 df['Sentiment_compound'] = df['Sentiment_scores'].apply(lambda x: x['compound'])
 df['Sentiment_category'] = df['Sentiment_compound'].apply(lambda x: 'Positive' if x > 0.05 else ('Negative' if x < -0.05 else 'Neutral'))
 
+
 # Create Bag of Words features
 count_vectorizer = CountVectorizer(max_features=100)
 bow_matrix = count_vectorizer.fit_transform(df['Remarks_cleaned'])
 bow_df = pd.DataFrame(bow_matrix.toarray(), columns=count_vectorizer.get_feature_names_out())
 df = pd.concat([df, bow_df], axis=1)
+
 
 # Create TF-IDF features
 tfidf_vectorizer = TfidfVectorizer(max_features=100)
@@ -293,7 +294,6 @@ df = pd.concat([df, tfidf_df], axis=1)
 # Extract key phrases or topics
 # (This is a simple approach - more sophisticated topic modeling might use LDA)
 df['Key_nouns'] = df['Remarks_tokens'].apply(lambda x: [word for word, pos in nltk.pos_tag(x) if pos.startswith('NN')])
-
 
 
 # Create Topics dataframe
@@ -321,7 +321,6 @@ for topic_idx, topic in enumerate(nmf_model.components_):
 topics_df = pd.DataFrame(topics, columns=[f'Word {i+1}' for i in range(10)])
 topics_df.index = [f'Topic {i+1}' for i in range(num_topics)]
 topics_df
-
 
 
 #!pip install gensim
@@ -365,7 +364,6 @@ df['Primary_topic'] = df['Topic_distribution'].apply(
 )
 
 
-
 # Visualize topics using pyLDAvis
 import pyLDAvis.gensim_models as gensimvis
 vis = gensimvis.prepare(lda_model, corpus, dictionary)
@@ -392,7 +390,6 @@ def get_top_keywords(lda_model, doc_bow, n=3):
 
 # Apply to each document
 df['Top_keywords'] = [get_top_keywords(lda_model, doc) for doc in corpus]
-
 
 
 # WordCloud
@@ -467,7 +464,6 @@ print(classification_report(y_test, y_pred))
 print("\nAccuracy:", accuracy_score(y_test, y_pred))
 
 
-
 # Advanced ML - Feature Importance
 
 # Extract feature names
@@ -503,6 +499,7 @@ try:
     plt.show()
 except:
     print("Couldn't extract feature importances properly - dimensionality issue with feature names")
+
 
 
 # Logistic Regression Model for Interpretability
@@ -551,7 +548,6 @@ product_analysis = product_analysis.rename(columns={'Unique id': 'Ticket count'}
 
 print("\nProduct Category Analysis:")
 print(product_analysis)
-
 
 
 # Time-Based Analysis
