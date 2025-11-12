@@ -313,7 +313,7 @@ class YahooJobExtractor:
 def main():
     # Configuration - UPDATE THESE WITH YOUR DETAILS
     EMAIL = "lateefah_yusuf@yahoo.com"
-    PASSWORD = "chzx aodx uekf uosu"  # Use App Password, not regular password
+    PASSWORD = "******"  # Use App Password, not regular password
     
     # Date range (optional) - Format: DD-Mon-YYYY
     START_DATE = "01-Aug-2023"  
