@@ -4,7 +4,7 @@ An intelligent bot/LLM that converts DAX (Data Analysis Expressions) measures to
 
 ## Features
 
-- 🤖 **LLM-Powered Conversion**: Uses OpenAI's GPT models to intelligently convert DAX to SQL
+- 🤖 **LLM-Powered Conversion**: Uses OpenAI's GPT models to easily convert DAX to SQL
 - 📝 **Batch Processing**: Convert multiple DAX measures at once
 - 🎯 **Context-Aware**: Supports table context and additional metadata
 - 💬 **CLI Interface**: Easy-to-use command-line tool
@@ -15,11 +15,13 @@ An intelligent bot/LLM that converts DAX (Data Analysis Expressions) measures to
 1. Clone or download this repository
 
 2. Install dependencies:
+   
 ```bash
 pip install -r requirements.txt
 ```
 
 3. Set up your OpenAI API key:
+   
 ```bash
 # Option 1: Environment variable (recommended)
 export OPENAI_API_KEY="your-api-key-here"
@@ -35,36 +37,43 @@ $env:OPENAI_API_KEY="your-api-key-here"
 ### Command Line Interface
 
 #### Convert a single DAX measure:
+
 ```bash
 python cli.py "SUM(Sales[Amount])"
 ```
 
 #### Convert from a file:
+
 ```bash
 python cli.py -f measures.dax
 ```
 
 #### With table context:
+
 ```bash
 python cli.py "SUM(Sales[Amount])" --table Sales
 ```
 
 #### Verbose output (with explanation):
+
 ```bash
 python cli.py "SUM(Sales[Amount])" --verbose
 ```
 
 #### Save to file:
+
 ```bash
 python cli.py "SUM(Sales[Amount])" --output result.sql
 ```
 
 #### JSON output:
+
 ```bash
 python cli.py "SUM(Sales[Amount])" --json
 ```
 
 #### Use different model:
+
 ```bash
 python cli.py "SUM(Sales[Amount])" --model gpt-3.5-turbo
 ```
