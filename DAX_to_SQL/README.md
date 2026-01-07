@@ -4,11 +4,11 @@ An intelligent bot/LLM that converts DAX (Data Analysis Expressions) measures to
 
 ## Features
 
-- 🤖 **LLM-Powered Conversion**: Uses OpenAI's GPT models to easily convert DAX to SQL
-- 📝 **Batch Processing**: Convert multiple DAX measures at once
-- 🎯 **Context-Aware**: Supports table context and additional metadata
-- 💬 **CLI Interface**: Easy-to-use command-line tool
-- 📊 **Examples**: Includes common DAX patterns and their SQL equivalents
+- **LLM-Powered Conversion**: Uses OpenAI's GPT models to easily convert DAX to SQL
+- **Batch Processing**: Convert multiple DAX measures at once
+- **Context-Aware**: Supports table context and additional metadata
+- **CLI Interface**: Easy-to-use command-line tool
+- **Examples**: Includes common DAX patterns and their SQL equivalents
 
 ## Installation
 
